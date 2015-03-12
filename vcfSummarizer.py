@@ -148,6 +148,11 @@ def __main__():
         sys.stderr.write("Ran out of VCF.\n")
         
 def printSummary(record, ref, alt, total, type, div, genos, gene, dir):
+
+    #continue if not a 0fold or 4fold site!
+    if str(type) not in ['3','4']:
+	continue
+
     myStr = record.CHROM+"\t"+str(record.POS)+"\t"+str(record.REF)+"\t"+str(record.ALT[0])+"\t"+str(ref)+"\t"+str(alt)+"\t"+str(total)+"\t"+str(type)+"\t"+str(div)
     if _a:
         myStr += "\t%s\t%s" % (gene, dir)
