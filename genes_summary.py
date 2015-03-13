@@ -19,7 +19,7 @@ for line in geneFile:
 geneFile.close()
 
 #myOut = open('../../0fold4fold.withgenes.summary','w'))
-sumRead = summary.Reader(open('../../0fold4fold.summary','rb'))
+sumRead = summary.Reader(open('','rb'))
 #sumRead = summary.Reader(open('../test.summary','rb'))
 
 sumRead.addGenes()
@@ -30,7 +30,9 @@ for site in sumRead:
 		continue
 	else:
 		geneName = gffDic[int(site.CHROM.split('_')[1])][site.POS]
-		print("	".join([site.__str__(),geneName,"NA"]))
+		site.GENE = geneName
+		print(site)
+		#print("	".join([site.__str__(),geneName,"NA"]))
 	
 
 
