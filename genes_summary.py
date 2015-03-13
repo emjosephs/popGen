@@ -1,4 +1,4 @@
-#splits summary files by gene
+# adds gene names to summary file
 import summary
 import sys
 
