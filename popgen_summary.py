@@ -18,7 +18,7 @@ def __main__():
 		
 	if myTest == "sfs":
 		siteDic = mySum.summary.typesAsInt()
-		header = "gene	0fold	"+"	".join([str(x) for x in range(0,count)])+"	4fold	"+"	".join([str(x) for x in range(0,count)])
+		header = "gene	"+"	".join(["0fold."+str(x) for x in range(0,count)])+"	".join(["4fold."+str(x) for x in range(0,count)])
 		for site in mySum:
 			siteType = siteDic[int(site.Types[0])]
 			#is there enough coverage?
@@ -36,12 +36,12 @@ def __main__():
 			#add in this site info
 			geneDict[site.GENE][siteType][mafDown] += 1
 			
-	#write out
-	out.write(header)
-	for gene in geneDict.keys():
-		out.write("\n"+gene+"	")
-		for thing in geneDict[gene]:
-			out.write( "	".join([str(x) for x in geneDict[gene][thing]]))
+		#write out
+		out.write(header)
+		for gene in geneDict.keys():
+			out.write("\n"+gene+"	")
+			for thing in ['0fold','4fold']:
+				out.write( "	".join([str(x) for x in geneDict[gene][thing]]))
 
 
 def downsamp(ref, alt, count): #takes in counts of ref and alt alleles, and count=N of downsampling, returns the # of alt alleles in the downsampled sample
