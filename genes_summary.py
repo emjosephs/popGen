@@ -19,7 +19,7 @@ for line in geneFile:
 geneFile.close()
 
 #myOut = open('../../0fold4fold.withgenes.summary','w'))
-sumRead = summary.Reader(open('../../0fold4fold.summary','rb'))
+sumRead = summary.Reader(open('/data/youngwha.lee/189_genomes/UG_all_vars/recal_vcfs/vcfsummaries/downsampled320/sc8_down_320_4','rb'))
 #sumRead = summary.Reader(open('../test.summary','rb'))
 
 sumRead.addGenes()

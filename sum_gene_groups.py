@@ -1,4 +1,5 @@
 import sys
+import numpy
 
 if len(sys.argv) < 3:
 	print("python sum_gen_groups.py [data file] [gene list]")
@@ -14,11 +15,22 @@ genes.close()
 
 myData = open(sys.argv[1],'r')
 header = myData.readline() #skip header
-outData = [0]*(len(header.split()) - 1)
+outData = []
+numFields = len(header.split())-1
+for i in range(0,numFields):
+	outData.append([])
+print(numFields)
 
-print(outData)
+for line in myData:
+	gene, data = line.split()[0], [int(x) for x in line.split()[1:]]
+	if gene in geneList:
+		#outData = [x+y for x,y in zip(outData,data)]
+		for i in range(0, numFields):
+			outData[i].append(data[i])
+means = [float(sum(x))/len(x) for x in outData]
+print(means)
+errs =  [numpy.std(numpy.array(x)) for x in outData]
+print(errs)
 
-#for line in myData:
-#	gene, data = line.split()[0], line.split()[1:]
-#	if gene
+
 

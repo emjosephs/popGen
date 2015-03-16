@@ -13,8 +13,7 @@ def __main__():
 	#out.write("pac	piS	piN	Ssite#	Nsite#\n")
 	myTest = sys.argv[3]
 	geneDict = {}
-	count = 160
-
+	count = 320
 		
 	if myTest == "sfs":
 		siteDic = mySum.summary.typesAsInt()
@@ -22,7 +21,7 @@ def __main__():
 		for site in mySum:
 			siteType = siteDic[int(site.Types[0])]
 			#is there enough coverage?
-			if site.TOTAL < 161:
+			if site.TOTAL < 320:
 				continue
 			# new gene?
 			if site.GENE not in geneDict.keys():
