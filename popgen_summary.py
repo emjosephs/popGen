@@ -39,9 +39,9 @@ def __main__():
 		#write out
 		out.write(header)
 		for gene in geneDict.keys():
-			out.write("\n"+gene+"	")
+			out.write("\n"+gene)
 			for thing in ['0fold','4fold']:
-				out.write( "	".join([str(x) for x in geneDict[gene][thing]]))
+				out.write("	"+ "	".join([str(x) for x in geneDict[gene][thing]]))
 
 
 def downsamp(ref, alt, count): #takes in counts of ref and alt alleles, and count=N of downsampling, returns the # of alt alleles in the downsampled sample
