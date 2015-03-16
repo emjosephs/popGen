@@ -2,6 +2,10 @@
 import summary
 import sys
 
+if len(sys.argv) < 2:
+	print('python gene_summary.py [input summary file]')
+	sys.exit()
+
 gffDic = {} #keys are scaffolds, values are a list of positions, 0 for 0s, or else gene name
 for i in range(1,9):
 	gffDic[i] = [0]*19624520
@@ -19,8 +23,8 @@ for line in geneFile:
 geneFile.close()
 
 #myOut = open('../../0fold4fold.withgenes.summary','w'))
-sumRead = summary.Reader(open('/data/youngwha.lee/189_genomes/UG_all_vars/recal_vcfs/vcfsummaries/downsampled320/sc8_down_320_4','rb'))
-#sumRead = summary.Reader(open('../test.summary','rb'))
+#sumRead = summary.Reader(open('/data/youngwha.lee/189_genomes/UG_all_vars/recal_vcfs/vcfsummaries/downsampled320/sc8_down_320_4','rb'))
+sumRead = summary.Reader(open(sys.argv[1],'rb'))
 
 sumRead.addGenes()
 print(sumRead.Header)
