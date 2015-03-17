@@ -17,7 +17,7 @@ def __main__():
 		
 	if myTest == "sfs":
 		siteDic = mySum.summary.typesAsInt()
-		header = "gene	"+"	".join(["fold0."+str(x) for x in range(0,count)])+"	".join(["fold0."+str(x) for x in range(0,count)])
+		header = "gene	"+"	".join(["fold0."+str(x) for x in range(0,count)])+"	".join(["fold4."+str(x) for x in range(0,count)])
 		for site in mySum:
 			siteType = siteDic[int(site.Types[0])]
 			#is there enough coverage?
