@@ -12,6 +12,7 @@ for gene in genes:
 	geneList.append(gene.rstrip())
 
 genes.close()
+modName = genes.split('/')[-1].split('.')[0]
 
 myData = open(sys.argv[1],'r')
 header = myData.readline() #skip header
@@ -28,9 +29,9 @@ for line in myData:
 		for i in range(0, numFields):
 			outData[i].append(data[i])
 means = [float(sum(x))/len(x) for x in outData]
-print(means)
+print(modName+"	means	"+means)
 errs =  [numpy.std(numpy.array(x)) for x in outData]
-print(errs)
+print(modName+"	stdevs	"+errs)
 
 
 
