@@ -12,7 +12,7 @@ for gene in genes:
 	geneList.append(gene.rstrip())
 
 genes.close()
-modName = genes.split('/')[-1].split('.')[0]
+modName = sys.argv[2].split('/')[-1].split('.')[0]
 
 myData = open(sys.argv[1],'r')
 header = myData.readline() #skip header
