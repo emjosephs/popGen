@@ -23,13 +23,17 @@ def __main__():
 			#is there enough coverage?
 			if site.TOTAL < 320:
 				continue
+			# is it the right type of site?
+			if siteType not in ['0fold','4fold']:
+				continue	
 			# new gene?
 			if site.GENE not in geneDict.keys():
 				#make empty dictionary 
 				geneDict[site.GENE] = newSfsDict(count)
 		
 			#downsample and get alternate allele frequency
-			aaf = downsamp(site.REF_NUM, site.ALT_NUM,count)
+			#aaf = downsamp(site.REF_NUM, site.ALT_NUM,count)
+			aaf = site.ALT_NUM
 			#get minor allele count
 			mafDown = maf(aaf, count)
 			#add in this site info
