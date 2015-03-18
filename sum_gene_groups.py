@@ -29,10 +29,10 @@ for line in myData:
 		#outData = [x+y for x,y in zip(outData,data)]
 		for i in range(0, numFields):
 			outData[i].append(data[i])
-means = [float(sum(x))/len(x) for x in outData]
-print(modName+"	means	"+means)
-errs =  [numpy.std(numpy.array(x)) for x in outData]
-print(modName+"	stdevs	"+errs)
+means = [str(float(sum(x))/len(x)) for x in outData]
+print(modName+"	means	"+"	".join(means))
+errs =  [str(numpy.std(numpy.array(x))) for x in outData]
+print(modName+"	stdevs	"+"	".join(errs))
 
 
 
