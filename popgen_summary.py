@@ -23,8 +23,8 @@ def __main__():
 
 def dfealpha(mySum, out, count, siteDic):
 	header = "gene	fold0.div	"+"	".join(["fold0."+str(x) for x in range(0,count)])+"	fold4.div	"+"	".join(["fold4."+str(x) for x in range(0,count)])
+	sfsDict, divDict = {},{}
 	for site in mySum:
-		sfsDict, divDict = {},{}
 		siteType = siteDic[int(site.Types[0])]
 		#is there enough coverage?
 		if site.TOTAL < 320:
