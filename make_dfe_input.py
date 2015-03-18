@@ -43,8 +43,8 @@ def __main__():
 	print(str(sum(selSFS)) +"	"+ str(selDiv)) #[SEL SITES] [SEL DIFFS]
 	print( str(sum(neuSFS)) +"	" + str(neuDiv))  #[NEU SITES] [NEU DIFFS]
 	print("320") #[d1]
-	print( "	".join([str(x) for x in selSFS]) )#[Selected SFS 1]
-	print( "	".join([str(x) for x in neuSFS]) )#[Neutral SFS 1]
+	print( "	".join([str(x) for x in selSFS]) + "	0")#[Selected SFS 1]
+	print( "	".join([str(x) for x in neuSFS]) +"	0")#[Neutral SFS 1]
 
 
 #means = [str(float(sum(x))/len(x)) for x in outData]
