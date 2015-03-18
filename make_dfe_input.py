@@ -21,17 +21,30 @@ def __main__():
         	header = myData.readline() #skip header
         	if not numFields: #if first file, figure out the number of fields 
 			outData, dataNames = makeOutData(header)
-			
+			numFields = len(dataNames)		
+	
         	for line in myData:
                 	if line[0:4] == "gene": #skip errant headers
                         	continue 
                 	gene, data = line.split()[0], [int(x) for x in line.split()[1:]]
                 	if gene in geneList: #is it in our module
                         	for i in range(0, numFields):
-                                	outData[i].append(data[i])
+                                	outData[i] = outData[i] + data[i]  #out data is just a list of sums, could switch to .append(data[i]) for bootstrapping
+
+	outDict = dic( zip( dataNames,outData) )	
+	selSFSNames = ["fold0."+str(x) for x in range(0, 319)]
+	neuSFSNames = ["fold4."+str(x) for x in range(0, 319)]
+	selSFS = [outDic[x] for x in selSFSNames]
+	neuSFS = [outDic[x] for x in neuSFSNames]
+	selDiv, neuDiv = outDic["fold0.div"], outDic["fold4.div"]
 
 	#print out in dfe alpha input format
-	
+	print(modName) #[NAME1]
+	print(str(sum(selSFS)) +"	"+ str(selDiv)) #[SEL SITES] [SEL DIFFS]
+	print( str(sum(neuSFS)) +"	" + str(neuDiv))  #[NEU SITES] [NEU DIFFS]
+	print("320") #[d1]
+	print( "	".join([str(x) for x in selSFS]) )#[Selected SFS 1]
+	print( "	".join([str(x) for x in neuSFS]) )#[Neutral SFS 1]
 
 
 #means = [str(float(sum(x))/len(x)) for x in outData]
