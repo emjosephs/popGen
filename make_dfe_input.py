@@ -31,7 +31,7 @@ def __main__():
                         	for i in range(0, numFields):
                                 	outData[i].append(data[i])
 
-	outDict = dict( zip( dataNames,outData) )	
+	outDic = dict( zip( dataNames,outData) )	
 	selSFSNames = ["fold0."+str(x) for x in range(0, 319)]
 	neuSFSNames = ["fold4."+str(x) for x in range(0, 319)]
 	selSFS = [sum(outDic[x]) for x in selSFSNames]
