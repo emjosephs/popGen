@@ -16,15 +16,15 @@ def __main__():
 		
 	siteDic = mySum.summary.typesAsInt()
 	if myTest == "sfs":
-		sfs(mySum, out, count)
+		sfs(mySum, out, count, siteDic)
 
 	elif myTest == "dfealpha":
-		dfealpha(mySum, out, count)
+		dfealpha(mySum, out, count, siteDic)
 
-def dfealpha(mySum, out, count):
+def dfealpha(mySum, out, count, siteDic):
 	header = "gene	fold0.div	"+"	".join(["fold0."+str(x) for x in range(0,count)])+"	fold4.div	"+"	".join(["fold4."+str(x) for x in range(0,count)])
 	for site in mySum:
-		sfsDict, divDict = {}
+		sfsDict, divDict = {},{}
 		siteType = siteDic[int(site.Types[0])]
 		#is there enough coverage?
 		if site.TOTAL < 320:
@@ -33,15 +33,15 @@ def dfealpha(mySum, out, count):
 		if siteType not in ['0fold','4fold']:
 			continue	
 		# new gene?
-		if site.GENE not in geneDict.keys():
+		if site.GENE not in sfsDict.keys():
 			sfsDict[site.GENE] = newSfsDict(count)
 			divDict[site.GENE] = {'0fold':0, '4fold':0}
 
-		maf = maf(site.ALT_NUM, count)
-		sfsDict[site.GENE][siteType][maf] += 1 #add in sfs info
+		siteMaf = maf(site.ALT_NUM, count)
+		sfsDict[site.GENE][siteType][siteMaf] += 1 #add in sfs info
 
 		#add in divergence info
-		divDict[site.Gene][siteType] += site.DIVERGENCE
+		divDict[site.GENE][siteType] += site.DIVERGENCE
 
 	#write out
 	out.write(header)
@@ -50,7 +50,7 @@ def dfealpha(mySum, out, count):
 		for thing in ['0fold','4fold']:
 			out.write("	"+str(divDict[thing]) + "	" + "	".join([str(x) for x in sfsDict[gene][thing]]))		
 
-def sfs(mySum, out, count):
+def sfs(mySum, out, count, siteDic):
 	header = "gene	"+"	".join(["fold0."+str(x) for x in range(0,count)])+"	".join(["fold4."+str(x) for x in range(0,count)])
 	for site in mySum:
 		geneDict = {}
