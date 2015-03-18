@@ -29,13 +29,13 @@ def __main__():
                 	gene, data = line.split()[0], [int(x) for x in line.split()[1:]]
                 	if gene in geneList: #is it in our module
                         	for i in range(0, numFields):
-                                	outData[i] = outData[i] + data[i]  #out data is just a list of sums, could switch to .append(data[i]) for bootstrapping
+                                	outData[i].append(data[i])
 
 	outDict = dic( zip( dataNames,outData) )	
 	selSFSNames = ["fold0."+str(x) for x in range(0, 319)]
 	neuSFSNames = ["fold4."+str(x) for x in range(0, 319)]
-	selSFS = [outDic[x] for x in selSFSNames]
-	neuSFS = [outDic[x] for x in neuSFSNames]
+	selSFS = [sum(outDic[x]) for x in selSFSNames]
+	neuSFS = [sum(outDic[x]) for x in neuSFSNames]
 	selDiv, neuDiv = outDic["fold0.div"], outDic["fold4.div"]
 
 	#print out in dfe alpha input format
