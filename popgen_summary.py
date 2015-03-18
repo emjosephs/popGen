@@ -48,7 +48,7 @@ def dfealpha(mySum, out, count, siteDic):
 	for gene in sfsDict.keys():
 		out.write("\n"+gene)
 		for thing in ['0fold','4fold']:
-			out.write("	"+str(divDict[thing]) + "	" + "	".join([str(x) for x in sfsDict[gene][thing]]))		
+			out.write("	"+str(divDict[gene][thing]) + "	" + "	".join([str(x) for x in sfsDict[gene][thing]]))		
 
 def sfs(mySum, out, count, siteDic):
 	header = "gene	"+"	".join(["fold0."+str(x) for x in range(0,count)])+"	".join(["fold4."+str(x) for x in range(0,count)])
