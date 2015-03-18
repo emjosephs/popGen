@@ -20,9 +20,10 @@ outData = []
 numFields = len(header.split())-1
 for i in range(0,numFields):
 	outData.append([])
-print(numFields)
 
 for line in myData:
+	if line[0:4] == "gene":
+		continue #header gile
 	gene, data = line.split()[0], [int(x) for x in line.split()[1:]]
 	if gene in geneList:
 		#outData = [x+y for x,y in zip(outData,data)]
