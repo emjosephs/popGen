@@ -1,19 +1,19 @@
 import sys
 import summary
 import random
-
+import getopt
 if len(sys.argv) < 4:
 	print('python popgen_master.py [summary file] [output file] [pi/sfs/dfealpha]')
 	sys.exit()
-
+_d=320
 def __main__():
 
 	mySum = summary.Reader(open(sys.argv[1],'rb'))
 	out = open(sys.argv[2],'w')
 	#out.write("pac	piS	piN	Ssite#	Nsite#\n")
 	myTest = sys.argv[3]
-	count = 320
-		
+	count = _d
+	processArgs(4)
 	siteDic = mySum.summary.typesAsInt()
 	if myTest == "sfs":
 		sfs(mySum, out, count, siteDic)
@@ -27,7 +27,7 @@ def dfealpha(mySum, out, count, siteDic):
 	for site in mySum:
 		siteType = siteDic[int(site.Types[0])]
 		#is there enough coverage?
-		if site.TOTAL < 320:
+		if site.TOTAL < _d:
 			continue
 		# is it the right type of site?
 		if siteType not in ['0fold','4fold']:
@@ -39,7 +39,7 @@ def dfealpha(mySum, out, count, siteDic):
 
 		siteMaf = maf(site.ALT_NUM, count)
 		sfsDict[site.GENE][siteType][siteMaf] += 1 #add in sfs info
-
+		print(site.POS,sfsDict)
 		#add in divergence info
 		divDict[site.GENE][siteType] += site.DIVERGENCE
 
@@ -52,11 +52,11 @@ def dfealpha(mySum, out, count, siteDic):
 
 def sfs(mySum, out, count, siteDic):
 	header = "gene	"+"	".join(["fold0."+str(x) for x in range(0,count)])+"	".join(["fold4."+str(x) for x in range(0,count)])
+	geneDict = {}
 	for site in mySum:
-		geneDict = {}
 		siteType = siteDic[int(site.Types[0])]
 		#is there enough coverage?
-		if site.TOTAL < 320:
+		if site.TOTAL < _d:
 			continue
 		# is it the right type of site?
 		if siteType not in ['0fold','4fold']:
@@ -73,7 +73,7 @@ def sfs(mySum, out, count, siteDic):
 		mafDown = maf(aaf, count)
 		#add in this site info
 		geneDict[site.GENE][siteType][mafDown] += 1
-			
+		print(site.POS,site.GENE,siteType,mafDown,geneDict[site.GENE])	
 	#write out
 	out.write(header)
 	for gene in geneDict.keys():
@@ -104,6 +104,17 @@ def maf(aaf, count): # calculates the # of minor alleles when given the # of alt
 	return(maf)
 
 
+def processArgs(num):
+	try:
+		opts, args = getopt.getopt(sys.argv[num:],"d:")
+	except getopt.GetoptError:
+		"wrong usage"
+	for opt,arg in opts:
+		# depth cutoff
+		if opt=="-d":   
+			global _d
+			_d=int(arg)
+#def theta_w (
 if __name__ == "__main__":
         __main__()
 
