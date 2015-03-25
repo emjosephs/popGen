@@ -12,8 +12,8 @@ def __main__():
 	out = open(sys.argv[2],'w')
 	#out.write("pac	piS	piN	Ssite#	Nsite#\n")
 	myTest = sys.argv[3]
+	processArgs(4)	
 	count = _d
-	processArgs(4)
 	siteDic = mySum.summary.typesAsInt()
 	if myTest == "sfs":
 		sfs(mySum, out, count, siteDic)
