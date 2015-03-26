@@ -21,9 +21,10 @@ def __main__():
 	elif myTest == "dfealpha":
 		dfealpha(mySum, out, count, siteDic)
 	elif myTest == "pi":
-		dict = sfs(mySum, out, count, siteDic)
-		pi_dict = pi(dict)
-		print(pi_dict)
+		diversity(mySum, out, count, siteDic)
+	
+
+
 def dfealpha(mySum, out, count, siteDic):
 	header = "gene	fold0.div	"+"	".join(["fold0."+str(x) for x in range(0,count)])+"	fold4.div	"+"	".join(["fold4."+str(x) for x in range(0,count)])
 	sfsDict, divDict = {},{}
@@ -78,14 +79,38 @@ def sfs(mySum, out, count, siteDic):
 		geneDict[site.GENE][siteType][mafDown] += 1
 		#print(site.POS,site.GENE,siteType,mafDown,geneDict[site.GENE])	
 	#write out
+
 	out.write(header)
 	for gene in geneDict.keys():
 		out.write("\n"+gene)
 		for thing in ['0fold','4fold']:
 			out.write("	"+ "	".join([str(x) for x in geneDict[gene][thing]]))
 	return(geneDict)
+def diversity (mySum, out, count, siteDic):
+	geneDict = {}
+	divDict = {'0fold':{'poly':0,'total':0,'pi':0},'4fold':{'poly':0,'total':0,'pi':0}}	
+	for site in mySum:
+	        siteType = siteDic[int(site.Types[0])]
+                #is there enough coverage?
+	        if site.TOTAL < _d:
+        	 	  continue
+        	        # is it the right type of site?
+        	if siteType not in ['0fold','4fold']:
+        	          continue
+                # new gene?
+        	if site.GENE not in geneDict.keys():
+                        #make empty dictionary
+        	          geneDict[site.GENE] = newSfsDict(count)
+		if site.REF < site.TOTAL and site.ALT < site.TOTAL:
+			divDict[siteType]['poly']+=1
+		divDict[siteType]['total']+=1
+		aaf = float(site.ALT_NUM)
+		n= float(site.TOTAL)
+		divDict[siteType]['pi']+=float(2*aaf/n)*(1-aaf/n)*(n/(n-1))
+		print float(2*aaf/n)*(1-aaf/n)*(n/(n-1))
+
 def pi (geneDict) :
-	print(geneDict.keys())
+	print(geneDict,)
 	pi_gene = {}
 	for gene in geneDict.keys():
 		pi_gene[gene] =  {"0fold":0,"4fold":0}
@@ -93,6 +118,8 @@ def pi (geneDict) :
 			pi_gene[gene]['0fold'] += (2*frq/(_d-1)*(1-frq/(_d-1)))*geneDict[gene]['0fold'][frq]
 			pi_gene[gene]['4fold'] += (2*frq/(_d-1)*(1-frq/(_d-1)))*geneDict[gene]['4fold'][frq]
 	return(pi_gene)
+
+
 def downsamp(ref, alt, count): #takes in counts of ref and alt alleles, and count=N of downsampling, returns the # of alt alleles in the downsampled sample
 	totList = [0]*ref + [1]*alt
 	ds = random.sample(totList, count)
