@@ -20,7 +20,10 @@ def __main__():
 
 	elif myTest == "dfealpha":
 		dfealpha(mySum, out, count, siteDic)
-
+	elif myTest == "pi":
+		dict = sfs(mySum, out, count, siteDic)
+		pi_dict = pi(dict)
+		print(pi_dict)
 def dfealpha(mySum, out, count, siteDic):
 	header = "gene	fold0.div	"+"	".join(["fold0."+str(x) for x in range(0,count)])+"	fold4.div	"+"	".join(["fold4."+str(x) for x in range(0,count)])
 	sfsDict, divDict = {},{}
@@ -80,8 +83,16 @@ def sfs(mySum, out, count, siteDic):
 		out.write("\n"+gene)
 		for thing in ['0fold','4fold']:
 			out.write("	"+ "	".join([str(x) for x in geneDict[gene][thing]]))
-
-
+	return(geneDict)
+def pi (geneDict) :
+	print(geneDict.keys())
+	pi_gene = {}
+	for gene in geneDict.keys():
+		pi_gene[gene] =  {"0fold":0,"4fold":0}
+		for frq in range(1,_d):
+			pi_gene[gene]['0fold'] += (2*frq/(_d-1)*(1-frq/(_d-1)))*geneDict[gene]['0fold'][frq]
+			pi_gene[gene]['4fold'] += (2*frq/(_d-1)*(1-frq/(_d-1)))*geneDict[gene]['4fold'][frq]
+	return(pi_gene)
 def downsamp(ref, alt, count): #takes in counts of ref and alt alleles, and count=N of downsampling, returns the # of alt alleles in the downsampled sample
 	totList = [0]*ref + [1]*alt
 	ds = random.sample(totList, count)
