@@ -2,6 +2,7 @@ import sys
 import summary
 import random
 import getopt
+import math
 if len(sys.argv) < 4:
 	print('python popgen_master.py [summary file] [output file] [pi/sfs/dfealpha]')
 	sys.exit()
@@ -87,8 +88,8 @@ def sfs(mySum, out, count, siteDic):
 			out.write("	"+ "	".join([str(x) for x in geneDict[gene][thing]]))
 	return(geneDict)
 def diversity (mySum, out, count, siteDic):
-	geneDict = {}
-	divDict = {'0fold':{'poly':0,'total':0,'pi':0},'4fold':{'poly':0,'total':0,'pi':0}}	
+	divDict = {}
+	out.write("gene\tpoly_rep\ttotal_rep\ttheta_rep\tpi_rep\tTajimas_D_rep\tpoly_syn\ttotal_syn\ttheta_syn\tpi_syn\Tajimas_D_syn\n")
 	for site in mySum:
 	        siteType = siteDic[int(site.Types[0])]
                 #is there enough coverage?
@@ -98,28 +99,84 @@ def diversity (mySum, out, count, siteDic):
         	if siteType not in ['0fold','4fold']:
         	          continue
                 # new gene?
-        	if site.GENE not in geneDict.keys():
+        	if site.GENE not in divDict.keys():
                         #make empty dictionary
-        	          geneDict[site.GENE] = newSfsDict(count)
-		if site.REF < site.TOTAL and site.ALT < site.TOTAL:
-			divDict[siteType]['poly']+=1
-		divDict[siteType]['total']+=1
+        	          divDict[site.GENE] = {'0fold':{'poly':0,'total':0,'pi':0,'n':0},'4fold':{'poly':0,'total':0,'pi':0,'n':0}}
+		if site.REF_NUM < site.TOTAL and site.ALT_NUM < site.TOTAL:
+			divDict[site.GENE][siteType]['poly']+=1
+		divDict[site.GENE][siteType]['total']+=1
 		aaf = float(site.ALT_NUM)
-		n= float(site.TOTAL)
-		divDict[siteType]['pi']+=float(2*aaf/n)*(1-aaf/n)*(n/(n-1))
-		print float(2*aaf/n)*(1-aaf/n)*(n/(n-1))
+		n = float(site.TOTAL)
+		divDict[site.GENE][siteType]['n']+= site.TOTAL
+		divDict[site.GENE][siteType]['pi']+=float(2*aaf/n)*(1-aaf/n)*(n/(n-1))
+	print divDict
+	for gene in divDict.keys():
+		out.write(gene+"	")
+		for type in ['0fold','4fold']:
+			theta = ''
+			a = ''
+			pi = ''
+			tD=''
+			if divDict[gene][type]['total']>0:
+				mean_n=int(divDict[gene][type]['n']/divDict[gene][type]['total'])
+				a = calc_a(mean_n)
+				print(gene,type,a,mean_n)
+				theta=(divDict[gene][type]['poly']/a)/divDict[gene][type]['total']
+				pi=divDict[gene][type]['pi']/divDict[gene][type]['total']
+				print (a,theta,pi)
+				den = D_denominator(mean_n,divDict[gene][type]['poly'])
+				print("den_syn",den)
+				if den > 0:
+					tD = (pi-theta)/den
+					print (gene, den, tD)
+				sep="\t"
+			out.write(sep.join(str(x) for x in [divDict[gene][type]['poly'],divDict[gene][type]['total'],theta,pi,tD]))
+			out.write("\t")
+		out.write("\n")
+#		if divDict[gene]['0fold']['total']>0:
+ #                       mean_n = int(divDict[gene]['0fold']['n']/divDict[gene]['0fold']['total'])
+#			a_rep=a(mean_n)
+ #                       theta_rep=(divDict[gene]['0fold']['poly']/a_rep)/divDict[gene]['0fold']['total']
+#			pi_rep=divDict[gene]['0fold']['pi']/divDict[gene]['0fold']['total']
+#			print (gene,a_rep,theta_rep,pi_rep)
+#			den_rep = D_denominator(mean_n,divDict[gene]['0fold']['poly'])
+#			print("den_rep",den_rep)
+#			if den_rep >0 :
+#				tD_rep = (pi_rep-theta_rep)/den_rep
+#				print (gene, den_rep, tD_rep)
+#			else:
+#				tD_rep=''
+def calc_a(n):
+	a = float(0)
+	for i in range(1,n):
+		a+= float(1.0/i)
+#		print (i,n)
+	return(a)
+def D_denominator(N,S):
+   a1 =0.0 #denom of theta
+   for i in range (1,N):
+      a1=a1 + 1.0/i
+   
 
-def pi (geneDict) :
-	print(geneDict,)
-	pi_gene = {}
-	for gene in geneDict.keys():
-		pi_gene[gene] =  {"0fold":0,"4fold":0}
-		for frq in range(1,_d):
-			pi_gene[gene]['0fold'] += (2*frq/(_d-1)*(1-frq/(_d-1)))*geneDict[gene]['0fold'][frq]
-			pi_gene[gene]['4fold'] += (2*frq/(_d-1)*(1-frq/(_d-1)))*geneDict[gene]['4fold'][frq]
-	return(pi_gene)
-
-
+   a2 = 0.0 #denom of theta
+   for i in range (1,N):
+       a2=a2 + 1.0/(i*i)
+    
+#   print("a1,a2",a1,a2)			
+   b1=(N+1.0)/(3.0*(N-1.0))
+   b2=(2.0*(N*N+N+3.0))/(9.0*N*(N-1.0))
+ #  print("b1,b2",b1,b2)	 
+   c1=b1-(1.0/a1)
+   e1=c1/a1
+#   print("c1,e1",c1,e1)
+   c2 = b2-(N+2.0)/(a1*N) + a2/(a1*a1)
+   e2 = c2/((a1*a1)+a2)
+#   print("c2,e2",c2,e2)
+   S= float(S)
+#   print(S)
+ #  print(e1*S+e2*S*(S-1.0))
+   denominator = math.sqrt(e1*S+e2*S*(S-1.0))
+   return(denominator)
 def downsamp(ref, alt, count): #takes in counts of ref and alt alleles, and count=N of downsampling, returns the # of alt alleles in the downsampled sample
 	totList = [0]*ref + [1]*alt
 	ds = random.sample(totList, count)
