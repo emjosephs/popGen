@@ -4,7 +4,7 @@ import random
 import getopt
 import math
 if len(sys.argv) < 4:
-	print('python popgen_master.py [summary file] [output file] [pi/sfs/dfealpha]')
+	print('python popgen_master.py [summary file] [output file] [diversity/sfs/dfealpha]')
 	sys.exit()
 _d=320
 def __main__():
@@ -21,7 +21,7 @@ def __main__():
 
 	elif myTest == "dfealpha":
 		dfealpha(mySum, out, count, siteDic)
-	elif myTest == "pi":
+	elif myTest == "diversity":
 		diversity(mySum, out, count, siteDic)
 	
 
@@ -89,7 +89,7 @@ def sfs(mySum, out, count, siteDic):
 	return(geneDict)
 def diversity (mySum, out, count, siteDic):
 	divDict = {}
-	out.write("gene\tpoly_rep\ttotal_rep\ttheta_rep\tpi_rep\tTajimas_D_rep\tpoly_syn\ttotal_syn\ttheta_syn\tpi_syn\Tajimas_D_syn\n")
+	out.write("gene\tn_rep\tpoly_rep\ttotal_rep\ttheta_rep\tpi_rep\tTajimas_D_rep\tn_syn\tpoly_syn\ttotal_syn\ttheta_syn\tpi_syn\tTajimas_D_syn\n")
 	for site in mySum:
 	        siteType = siteDic[int(site.Types[0])]
                 #is there enough coverage?
@@ -108,10 +108,12 @@ def diversity (mySum, out, count, siteDic):
 		aaf = float(site.ALT_NUM)
 		n = float(site.TOTAL)
 		divDict[site.GENE][siteType]['n']+= site.TOTAL
-		divDict[site.GENE][siteType]['pi']+=float(2*aaf/n)*(1-aaf/n)*(n/(n-1))
-	print divDict
-	for gene in divDict.keys():
-		out.write(gene+"	")
+		divDict[site.GENE][siteType]['pi']+=float(2*aaf/n)*(1-aaf/n)*(n/(n-1)) # see Gillespie 2nd ed p. 45
+#	print divDict
+	genelist = divDict.keys()
+	genelist.sort()
+	for gene in  genelist:
+		out.write(gene+"\t")
 		for type in ['0fold','4fold']:
 			theta = ''
 			a = ''
@@ -119,40 +121,27 @@ def diversity (mySum, out, count, siteDic):
 			tD=''
 			if divDict[gene][type]['total']>0:
 				mean_n=int(divDict[gene][type]['n']/divDict[gene][type]['total'])
-				a = calc_a(mean_n)
-				print(gene,type,a,mean_n)
+				a = calc_a(mean_n)  #Watterson's thera : S/a
+		#		print(gene,type,a,mean_n)
 				theta=(divDict[gene][type]['poly']/a)/divDict[gene][type]['total']
 				pi=divDict[gene][type]['pi']/divDict[gene][type]['total']
-				print (a,theta,pi)
+		#		print (a,theta,pi)
 				den = D_denominator(mean_n,divDict[gene][type]['poly'])
-				print("den_syn",den)
+		#		print("den_syn",den)
 				if den > 0:
 					tD = (pi-theta)/den
-					print (gene, den, tD)
+#					print (gene, den, tD)
 				sep="\t"
-			out.write(sep.join(str(x) for x in [divDict[gene][type]['poly'],divDict[gene][type]['total'],theta,pi,tD]))
+			out.write(sep.join(str(x) for x in [mean_n,divDict[gene][type]['poly'],divDict[gene][type]['total'],theta,pi,tD]))
 			out.write("\t")
 		out.write("\n")
-#		if divDict[gene]['0fold']['total']>0:
- #                       mean_n = int(divDict[gene]['0fold']['n']/divDict[gene]['0fold']['total'])
-#			a_rep=a(mean_n)
- #                       theta_rep=(divDict[gene]['0fold']['poly']/a_rep)/divDict[gene]['0fold']['total']
-#			pi_rep=divDict[gene]['0fold']['pi']/divDict[gene]['0fold']['total']
-#			print (gene,a_rep,theta_rep,pi_rep)
-#			den_rep = D_denominator(mean_n,divDict[gene]['0fold']['poly'])
-#			print("den_rep",den_rep)
-#			if den_rep >0 :
-#				tD_rep = (pi_rep-theta_rep)/den_rep
-#				print (gene, den_rep, tD_rep)
-#			else:
-#				tD_rep=''
 def calc_a(n):
 	a = float(0)
 	for i in range(1,n):
 		a+= float(1.0/i)
 #		print (i,n)
 	return(a)
-def D_denominator(N,S):
+def D_denominator(N,S): # denominator for Tajima's D
    a1 =0.0 #denom of theta
    for i in range (1,N):
       a1=a1 + 1.0/i
@@ -162,19 +151,14 @@ def D_denominator(N,S):
    for i in range (1,N):
        a2=a2 + 1.0/(i*i)
     
-#   print("a1,a2",a1,a2)			
+
    b1=(N+1.0)/(3.0*(N-1.0))
    b2=(2.0*(N*N+N+3.0))/(9.0*N*(N-1.0))
- #  print("b1,b2",b1,b2)	 
    c1=b1-(1.0/a1)
    e1=c1/a1
-#   print("c1,e1",c1,e1)
    c2 = b2-(N+2.0)/(a1*N) + a2/(a1*a1)
    e2 = c2/((a1*a1)+a2)
-#   print("c2,e2",c2,e2)
    S= float(S)
-#   print(S)
- #  print(e1*S+e2*S*(S-1.0))
    denominator = math.sqrt(e1*S+e2*S*(S-1.0))
    return(denominator)
 def downsamp(ref, alt, count): #takes in counts of ref and alt alleles, and count=N of downsampling, returns the # of alt alleles in the downsampled sample
