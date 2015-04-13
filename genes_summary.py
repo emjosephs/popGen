@@ -2,7 +2,7 @@
 import summary
 import sys
 
-if len(sys.argv) < 2:
+if len(sys.argv) < 3:
 	print('python gene_summary.py [input summary file]')
 	sys.exit()
 
@@ -12,7 +12,7 @@ for i in range(1,9):
 #	gffDic[i] = [0]*2000
 
 #make a dic of all the gene locations
-geneFile = open('../gff_gene_flatfile','r')
+geneFile = open(sys.argv[2],'r')
 #geneFile = open('../test_gff_gene_flatfile','r')
 for line in geneFile:
 	scaf, gene, start, end = line.split()
