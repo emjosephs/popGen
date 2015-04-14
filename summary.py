@@ -137,8 +137,8 @@ class Site(object):
         self.ALT_NUM = int(sline[5])
         self.TOTAL = int(sline[6])
         self.Types = sline[7].split(",")
-        self.DIVERGENCE = int(sline[8])
-        
+        self.DIVERGENCE = int(sline[8])    	
+    
         if self.summary.hadGenes:
             self.GENE = sline[9]
             self.DIR = sline[10]

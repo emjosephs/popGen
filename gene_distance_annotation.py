@@ -65,7 +65,7 @@ def __main__():
 		annotNames = "CHROM  POS     REF     ALT     REF_NUMBER      ALT_NUMBER      TOTAL   SITE_TYPE       DIVERGENCE".split()
 		lineDict = dict( zip( annotNames, line.split()[0:11] ) )
 
-		out.write("	".join(line[0:11]))
+		out.write("	".join(line.split()[0:11]))
 		if sys.argv[1] == "any":
 			out.write( "	"+str( upstr[lineDict["CHROM"]][int(lineDict["POS"])] ) )
 			out.write( "	"+str( dwstr[lineDict["CHROM"]][int(lineDict["POS"])] ) )
