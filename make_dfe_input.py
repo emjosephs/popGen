@@ -1,7 +1,7 @@
 import sys
 
 if len(sys.argv) < 4:
-	print('python make_dfe_input.py [input prefix] [gene list] [label]') 
+	print('python make_dfe_input.py [filelist] [gene list] [label]') 
 	sys.exit()
 
 def __main__():
@@ -16,9 +16,11 @@ def __main__():
 	modName = sys.argv[3]
 	numFields = None
 
-	for i in range(1,9):
-        	myData = open(sys.argv[1]+str(i),'r')
-        	header = myData.readline() #skip header
+	#for i in range(1,9):
+        for myfile in open(sys.argv[1],'r')
+		#myData = open(sys.argv[1]+str(i),'r')
+        	myData = open(myfile.rstrip(),'r')
+		header = myData.readline() #skip header
         	if not numFields: #if first file, figure out the number of fields 
 			outData, dataNames = makeOutData(header)
 			numFields = len(dataNames)		

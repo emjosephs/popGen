@@ -20,7 +20,6 @@ def __main__():
 	# read through summary file
 	mysum = summary_distance.Reader(open(sys.argv[1],'rb'))
 	for record in mysum:
-		
 		#is it polymorphic?
 		if record.ALT_NUM == 0:
 			continue

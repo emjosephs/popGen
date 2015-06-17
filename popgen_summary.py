@@ -29,6 +29,7 @@ def __main__():
 def dfealpha(mySum, out, count, siteDic):
 	header = "gene	fold0.div	"+"	".join(["fold0."+str(x) for x in range(0,count)])+"	fold4.div	"+"	".join(["fold4."+str(x) for x in range(0,count)])
 	sfsDict, divDict = {},{}
+	out.write(header)
 	for site in mySum:
 		siteType = siteDic[int(site.Types[0])]
 		#is there enough coverage?
@@ -49,7 +50,6 @@ def dfealpha(mySum, out, count, siteDic):
 		divDict[site.GENE][siteType] += site.DIVERGENCE
 
 	#write out
-	out.write(header)
 	for gene in sfsDict.keys():
 		out.write("\n"+gene)
 		for thing in ['0fold','4fold']:
