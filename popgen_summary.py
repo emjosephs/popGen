@@ -47,7 +47,9 @@ def dfealpha(mySum, out, count, siteDic):
 		sfsDict[site.GENE][siteType][siteMaf] += 1 #add in sfs info
 		#print(site.POS,sfsDict)
 		#add in divergence info
-		divDict[site.GENE][siteType] += site.DIVERGENCE
+		#divDict[site.GENE][siteType] += site.DIVERGENCE
+		if site.DIVERGENCE == 0:
+			dicDict[site.GENE][siteType] += 1
 
 	#write out
 	for gene in sfsDict.keys():

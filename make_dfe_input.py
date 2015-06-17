@@ -10,14 +10,15 @@ def __main__():
 	geneList = [] 
 	genes = open(sys.argv[2],'r')
 	for gene in genes:
-        	geneList.append(gene.rstrip())
+		pacGene = "PAC:"+gene.rstrip()
+        	geneList.append(pacGene)
 	genes.close()
 
 	modName = sys.argv[3]
 	numFields = None
 
 	#for i in range(1,9):
-        for myfile in open(sys.argv[1],'r')
+        for myfile in open(sys.argv[1],'r'):
 		#myData = open(sys.argv[1]+str(i),'r')
         	myData = open(myfile.rstrip(),'r')
 		header = myData.readline() #skip header
