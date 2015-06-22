@@ -48,7 +48,7 @@ def dfealpha(mySum, out, count, siteDic):
 		#print(site.POS,sfsDict)
 		#add in divergence info
 		#divDict[site.GENE][siteType] += site.DIVERGENCE
-		if str(site.DIVERGENCE) == "0":
+		if str(site.DIVERGENCE) == "1":
 			divDict[site.GENE][siteType] += 1
 
 	#write out
