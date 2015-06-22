@@ -40,11 +40,12 @@ def __main__():
 	selSFS = [sum(outDic[x]) for x in selSFSNames]
 	neuSFS = [sum(outDic[x]) for x in neuSFSNames]
 	selDiv, neuDiv = sum(outDic["fold0.div"]), sum(outDic["fold4.div"])
+	selDivTot, neuDivTot = sum(outDic["fold0.divTot"]), sum(outDic["fold4.divTot"])
 
 	#print out in dfe alpha input format
 	print(modName) #[NAME1]
-	print(str(sum(selSFS)) +"	"+ str(selDiv)) #[SEL SITES] [SEL DIFFS]
-	print( str(sum(neuSFS)) +"	" + str(neuDiv))  #[NEU SITES] [NEU DIFFS]
+	print(str(selDivTot) +"	"+ str(selDiv)) #[SEL SITES] [SEL DIFFS]
+	print( str(neuDivTot) +"	" + str(neuDiv))  #[NEU SITES] [NEU DIFFS]
 	print("320") #[d1]
 	print( "	".join([str(x) for x in selSFS]) + "	0	0")#[Selected SFS 1]
 	print( "	".join([str(x) for x in neuSFS]) +"	0	0")#[Neutral SFS 1]
