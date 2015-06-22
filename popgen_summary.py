@@ -42,6 +42,7 @@ def dfealpha(mySum, out, count, siteDic):
 		if site.GENE not in sfsDict.keys():
 			sfsDict[site.GENE] = newSfsDict(count)
 			divDict[site.GENE] = {'0fold':0, '4fold':0}
+			divTotDict[site.GENE] = {'0fold':0, '4fold':0}
 
 		siteMaf = maf(site.ALT_NUM, count)
 		sfsDict[site.GENE][siteType][siteMaf] += 1 #add in sfs info
