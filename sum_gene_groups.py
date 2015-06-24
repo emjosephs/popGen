@@ -32,6 +32,7 @@ for i in range(1,9):
 			for i in range(0, numFields):
 				outData[i].append(data[i])
 
+print(header)
 means = [str(float(sum(x))/len(x)) for x in outData]
 print(modName+"	means	"+"	".join(means))
 errs =  [str(numpy.std(numpy.array(x))) for x in outData]

@@ -15,7 +15,8 @@ def __main__():
 	geneList = [] 
 	genes = open(sys.argv[2],'r')
 	for gene in genes:
-        	geneList.append(gene.rstrip())
+		pacGene = "PAC:"+gene.rstrip()
+        	geneList.append(pacGene)
 	genes.close()
 
 	if dowebootstrap: #we bootstrap
@@ -25,9 +26,11 @@ def __main__():
 	modName = sys.argv[3]
 	numFields = None
 
-	for i in range(1,9):
-        	myData = open(sys.argv[1]+str(i),'r')
-        	header = myData.readline() #skip header
+	#for i in range(1,9):
+        for myfile in open(sys.argv[1],'r'):
+		#myData = open(sys.argv[1]+str(i),'r')
+        	myData = open(myfile.rstrip(),'r')
+		header = myData.readline() #skip header
         	if not numFields: #if first file, figure out the number of fields 
 			outData, dataNames = makeOutData(header)
 			numFields = len(dataNames)		
@@ -46,14 +49,15 @@ def __main__():
 	selSFS = [sum(outDic[x]) for x in selSFSNames]
 	neuSFS = [sum(outDic[x]) for x in neuSFSNames]
 	selDiv, neuDiv = sum(outDic["fold0.div"]), sum(outDic["fold4.div"])
+	selDivTot, neuDivTot = sum(outDic["fold0.divTot"]), sum(outDic["fold4.divTot"])
 
 	#print out in dfe alpha input format
 	print(modName) #[NAME1]
-	print(str(sum(selSFS)) +"	"+ str(selDiv)) #[SEL SITES] [SEL DIFFS]
-	print( str(sum(neuSFS)) +"	" + str(neuDiv))  #[NEU SITES] [NEU DIFFS]
+	print(str(selDivTot) +"	"+ str(selDiv)) #[SEL SITES] [SEL DIFFS]
+	print( str(neuDivTot) +"	" + str(neuDiv))  #[NEU SITES] [NEU DIFFS]
 	print("320") #[d1]
-	print( "	".join([str(x) for x in selSFS]) + "	0")#[Selected SFS 1]
-	print( "	".join([str(x) for x in neuSFS]) +"	0")#[Neutral SFS 1]
+	print( "	".join([str(x) for x in selSFS]) + "	0	0")#[Selected SFS 1]
+	print( "	".join([str(x) for x in neuSFS]) +"	0	0")#[Neutral SFS 1]
 
 
 #means = [str(float(sum(x))/len(x)) for x in outData]

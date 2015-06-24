@@ -138,6 +138,9 @@ class Site(object):
         self.TOTAL = int(sline[6])
         self.Types = sline[7].split(",")
         self.DIVERGENCE = int(sline[8])    	
+	self.UPSTR = sline[11].split(',')
+	self.DWSTR = sline[12].split(',')
+	
     
         if self.summary.hadGenes:
             self.GENE = sline[9]
@@ -190,8 +193,8 @@ class Reader(object):
             raise StopIteration
         else:
             while self.line.startswith("#"):
-                self.summary.parse(line)
-                self.line = self.filename.next()
+		self.summary.parse(line)
+		self.line = self.filename.next()
                 
             record = Site(self.summary, self.line)
             self.line = self.filename.next()
