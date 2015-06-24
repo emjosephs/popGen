@@ -1,8 +1,13 @@
 import sys
+import random
 
 if len(sys.argv) < 4:
-	print('python make_dfe_input.py [input prefix] [gene list] [label]') 
+	print('python make_dfe_input.py [input prefix] [gene list] [label] [boot?]') 
 	sys.exit()
+if len(sys.argv) < 5:
+	dowebootstrap = False
+elif sys.argv[4] == "boot":
+	dowebootstrap = True
 
 def __main__():
 
@@ -12,6 +17,10 @@ def __main__():
 	for gene in genes:
         	geneList.append(gene.rstrip())
 	genes.close()
+
+	if dowebootstrap: #we bootstrap
+		bootList = geneList
+		geneList = bootstrap(bootList)
 
 	modName = sys.argv[3]
 	numFields = None
@@ -59,6 +68,12 @@ def makeOutData(header):
 		outData.append([]) #make empty outData
 	dataNames = header.split()[1:]  #make a list of names for parsing the outdata later
 	return(outData, dataNames)
+
+def bootstrap(geneList): #does a bootstrap by sampling with replacement
+	outList = []
+	for i in range(0,len(geneList)):
+		outList.append(random.choice(geneList))
+	return(outList)
 
 if __name__ == "__main__":
         __main__()
