@@ -59,7 +59,8 @@ def __main__():
 		print("320") #[d1]
 		print( "	".join([str(x) for x in selSFS]) + "	0	0")#[Selected SFS 1]
 		print( "	".join([str(x) for x in neuSFS]) +"	0	0")#[Neutral SFS 1]
-
+		print("	")
+		print("	")
 
 #means = [str(float(sum(x))/len(x)) for x in outData]
 #print(modName+" means   "+"     ".join(means))
