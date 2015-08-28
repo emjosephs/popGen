@@ -77,7 +77,7 @@ def printBest(lines, likelihoods):
     for i,ml in enumerate(likelihoods[1:]):
         if (ML == "NA"  and ml != "NA") or (ml != "NA" and ml > ML):
             ML = ml
-            ML_i = i
+            ML_i = i+1  #avoid one-off error
     
     print(lines[ML_i])  
 
