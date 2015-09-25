@@ -1,27 +1,24 @@
 import sys
 import summary
 import random
-import getopt
+#import getopt
 import math
-if len(sys.argv) < 4:
-	print('python popgen_master.py [summary file] [output file] [diversity/sfs/dfealpha]')
-	sys.exit()
 _d=320
 def __main__():
 
-	mySum = summary.Reader(open(sys.argv[1],'rb'))
-	out = open(sys.argv[2],'w')
+	mySum = summary.Reader(_args.summary,'rb'))
+	out = open(_args.outfile,'w')
 	#out.write("pac	piS	piN	Ssite#	Nsite#\n")
 	myTest = sys.argv[3]
 	processArgs(4)	
 	count = _d
 	siteDic = mySum.summary.typesAsInt()
-	if myTest == "sfs":
+	if _args.afs:
 		sfs(mySum, out, count, siteDic)
 
-	elif myTest == "dfealpha":
+	elif _args.dfe:
 		dfealpha(mySum, out, count, siteDic)
-	elif myTest == "diversity":
+	elif _args.diversity:
 		diversity(mySum, out, count, siteDic)
 	
 
@@ -202,7 +199,33 @@ def processArgs(num):
 			global _d
 			_d=int(arg)
 #def theta_w (
+
+import argparse
+_args =  None
+
+def parseArgs():
+        parser = argparse.ArgumentParser(description="popgen statistics from a summary file")
+        parser.add_argument("-s", "--summary", type=str, help="summary file")
+        parser.add_argument("-o", "--output_file", type=str, help="output file")
+        group = parser.add_mutually_exclusive_group()
+        group.add_argument("-d", "--dfealpha", action="store_true", help="calculate dfe alpha inputs")
+        group.add_argument("-a", "--afs", action="store_true" help="calculate an afs")
+        group.add_argument("-p", "--diversity", action="store_true" help="calculate diversity")
+        group.add_argument("-v", "--divergence", action="store_true" help="calculate divergence")
+
+        global _args
+        _args = parser.parse_args()
+        sys.stderr.write(str(_args)+"\n")
+
+
 if __name__ == "__main__":
+        parseArgs()
+
+        if _args.test:
+                import doctest
+                doctest.testmod()
+                sys.exit()
+
         __main__()
 
 
